@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const url = API_BASE_URL ? `${API_BASE_URL}${path}` : path;
@@ -10,8 +10,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
       headers: { 'Content-Type': 'application/json' },
       ...options,
     });
-    const text = await res.text();
-    const data = text ? JSON.parse(text) : null;
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json')
+      ? await res.json()
+      : { raw: await res.text() };
     if (!res.ok) {
       throw { response: { status: res.status, data } };
     }
