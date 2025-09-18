@@ -26,7 +26,7 @@
   "scripts": {
     "start": "bun run index.ts",
     "dev": "bun --watch index.ts",
-    "build": "bun build index.ts --outdir dist --target bun",
+    "build": "bun install && bun build index.ts --outdir dist --target bun",
     "db:generate": "bunx prisma generate",
     "db:push": "bunx prisma db push",
     "db:migrate": "bunx prisma migrate dev",
